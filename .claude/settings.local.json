@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/e/Development/RAG_Advanced/.venv/Scripts/python.exe --version)",
+      "Bash(.venv/Scripts/pip show *)",
+      "PowerShell(& \"E:\\\\Development\\\\RAG_Advanced\\\\.venv\\\\Scripts\\\\pip3.exe\" install ipywidgets)"
+    ]
+  }
+}
