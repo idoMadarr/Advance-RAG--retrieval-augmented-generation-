@@ -1,3 +1,4 @@
+# uv add -r requirements.txt
 langchain
 langchain-groq
 faiss-cpu
@@ -13,3 +14,11 @@ python-docx
 docx2txt
 ipywidgets
 unstructured
+pandas
+openpyxl
+jq
+numpy
+matplotlib
+# Embeddings
+langchain-huggingface
+sentence-transformers
