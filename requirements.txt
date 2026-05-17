@@ -6,6 +6,7 @@ tiktoken
 langchain-community
 langchain-openai
 chromadb
+langchain-ollama
 sentence-transformers
 pypdf
 python-dotenv
