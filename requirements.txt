@@ -6,6 +6,7 @@ tiktoken
 langchain-community
 langchain-openai
 chromadb
+rank_bm25
 langchain-ollama
 sentence-transformers
 pypdf
