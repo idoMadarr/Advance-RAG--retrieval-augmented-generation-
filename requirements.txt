@@ -11,6 +11,7 @@ langchain-ollama
 sentence-transformers
 pypdf
 python-dotenv
+gradio
 ipykernel
 python-docx
 docx2txt
