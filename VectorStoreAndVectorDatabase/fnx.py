@@ -71,6 +71,7 @@ def init():
 
 
 def load_data():
+    global fnx_doc
     fnx_doc = []
 
     try:
