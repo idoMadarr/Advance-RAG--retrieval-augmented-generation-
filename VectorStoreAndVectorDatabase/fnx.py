@@ -71,6 +71,8 @@ def init():
 
 
 def load_data():
+    fnx_doc = []
+
     try:
         policies_table = pd.read_excel("../DataIngestParsing/data/csv_excel/policies_table.xlsx")
         users_table = pd.read_excel("../DataIngestParsing/data/csv_excel/users_table.xlsx")
@@ -81,7 +83,15 @@ def load_data():
             user_row = user_matched.iloc[0] if not user_matched.empty else pd.Series(dtype=object)
 
             car_matched = cars_tabel[cars_tabel["PolicyId"] == row["Id"]]
-            car_row = car_matched.iloc[0] if not car_matched.empty else pd.Series(dtype=object)
+            if car_matched.empty:
+                cars_text = "אין לפוליסה זו רכבים"
+            else:
+                car_lines = []
+                for _, car_row in car_matched.iterrows():
+                    car_lines.append(
+                        f'* {car_row.get("ModelName", "")} שנת {car_row.get("ManufactureYear", "")} מספר {car_row.get("CarNumber", "")} - בעל הרכב {car_row.get("CarOwnerDetails", "")} - תעריף לקילומטר {car_row.get("KmPremium", "")} ש"ח - הרכב מבוטח בביטוח {car_row.get("InsuranceDesc", '')} - שווי רכב משוער {car_row.get("CarPrice", '')}'
+                    )
+                    cars_text = "\n".join(car_lines)
 
             text = f"""
             פוליסה מספר {row.get('PolicyNumber', '')},
@@ -90,33 +100,34 @@ def load_data():
             תאריך תחילת הפוליסה: {row.get("PolicyStartDate", '')}
             תאריך סיום הפוליסה: {row.get("PolicyEndDate", '')}
             מזהה לקוח: {row.get('CustomerId', '')}
-    
+
             בעל הפוליסה: {user_row.get('FirstName', '')} {user_row.get('LastName', '')}
             תעודת זהות: {user_row.get('GovId', '')}
-    
-            כתובת בעל הפוליסה:
-            {user_row.get('CityDesc', '')}, {user_row.get('StreetDesc', '')} {user_row.get('HouseNumber', '')}
-    
+
+            כתובת בעל הפוליסה: 
+             {user_row.get('CityDesc', '')}, {user_row.get('StreetDesc', '')} {user_row.get('HouseNumber', '')}
+
             תאריך לידה: {user_row.get('BirthdayDate', '')}
             שנת הוצאת רישיון: {user_row.get('YearlicenseIssued', '')}
             כתובת אימייל: {user_row.get('Email', '')}
-    
+
             הפוליסה מנוהלת על ידי הסוכן: {row.get('AgentName', '')}
             מספר סוכן: {row.get('AgentId', '')}
             הפוליסה נוצרה על ידי: {row.get('CreatedBy', '')}
-    
+
             סטטוס הפוליסה: {"לא פעילה" if row.get("IsActive") == 0 else "פעילה"}.
             מספר התביעות שהיו לפוליסה: {row.get("NumberOfClaims", '')}
             מספר השלילות שהיו לפוליסה: {row.get("NumberOfDenials", '')}
-    
-             לפוליסה זו משויך רכב:
-             {car_row.get("ModelName", '')} {car_row.get("ManufactureYear", '')} מספר {car_row.get("CarNumber", '')} - בעל הרכב {car_row.get("CarOwnerDetails", '')} - תעריף לקילומטר {car_row.get("KmPremium", '')} ש"ח - הרכב מבוטח בביטוח {car_row.get("InsuranceDesc", '')} - שווי רכב משוער {car_row.get("CarPrice", '')} ש"ח
+
+            רכבים: 
+             {cars_text}
             """
 
             # Build metadata
             metadata = {
-                 "מספר פוליסה מלא": row.get('PolicyId', ''),
-                 "מספר הפוליסה": row.get('PolicyNumber', ''),
+                "מספר פוליסה מלא": row.get('PolicyId', ''),
+                "מספר הפוליסה": row.get('PolicyNumber', ''),
+                "govId": str(user_row.get("GovId", "")),
             }
 
             fnx_doc.append(
@@ -126,7 +137,7 @@ def load_data():
                 )
             )
 
-        print(f"The embedding data will look like that: {fnx_doc[52]}")
+        print(f"The embedding data will look like that: {fnx_doc[20]}")
     except Exception as e:
         print(f"Error loading PyPDF: {e}")
 
@@ -166,8 +177,20 @@ def build_retriever(vector_store):
         k: int = Field(default=3)
 
         def _get_relevant_documents(self, query: str) -> list[Document]:
-            # 1. Exact policy number lookup via metadata
+            # 1. Exact policy number / id lookup via metadata
             policy_match = re.search(r'\b(\d{6,10})\b', query)
+            id_match = re.search(r'\b(\d{9})\b', query)
+
+            if id_match:
+                id_number = int(id_match.group(1))
+                results = self.vector_store.get(where={"govId": id_number})
+                docs = [
+                    Document(page_content=pc, metadata=meta)
+                    for pc, meta in zip(results["documents"], results["metadatas"])
+                ]
+                if docs:
+                    return docs
+
             if policy_match:
                 policy_number = int(policy_match.group(1))
                 results = self.vector_store.get(where={"הסילופה רפסמ": policy_number})
