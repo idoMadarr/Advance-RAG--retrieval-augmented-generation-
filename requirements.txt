@@ -5,6 +5,7 @@ faiss-cpu
 tiktoken
 langchain-community
 langchain-openai
+langchain-chroma
 chromadb
 rank_bm25
 langchain-ollama

@@ -210,9 +210,17 @@ def build_retriever(vector_store):
 
 
 def query(prompt: str):
-    response = chain.invoke({"input": prompt})
-    # print(response.get("answer"))
-    return response.get("answer", "")
+    # Method 1 - Single shot
+    # response = chain.invoke({"input": prompt})
+    # # print(response.get("answer"))
+    # return response.get("answer", "")
+
+    # Method 2 - Streaming
+    partial = ""
+    for chunk in chain.stream({ "input": prompt }):
+        if token := chunk.get("answer"):
+            partial += token
+            yield  partial
 
 
 init()
