@@ -5,7 +5,7 @@ gr.Interface(
     fn=query,
     inputs=gr.Textbox(label="שאלה", placeholder="למשל: מה הכתובת של בעל הפוליסה 1029855?", rtl=True),
     outputs=gr.Textbox(label="תשובה", rtl=True),
-    title="פוליסומט - הפניקס צעיר",
+    title="פוליסע - הפניקס צעיר",
     description="שירות לקוחות",
     flagging_mode="never",
 ).launch(footer_links=[])
