@@ -8,4 +8,4 @@ gr.Interface(
     title="פוליסע - הפניקס צעיר",
     description="שירות לקוחות",
     flagging_mode="never",
-).launch(footer_links=[])
+).launch(footer_links=[], server_name="0.0.0.0")
