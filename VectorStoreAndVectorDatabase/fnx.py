@@ -194,7 +194,7 @@ def build_retriever(vector_store):
 
             if policy_match:
                 policy_number = int(policy_match.group(1))
-                results = self.vector_store.get(where={"הסילופה רפסמ": policy_number})
+                results = self.vector_store.get(where={"מספר הפוליסה": policy_number})
                 docs = [
                     Document(page_content=pc, metadata=meta)
                     for pc, meta in zip(results["documents"], results["metadatas"])
