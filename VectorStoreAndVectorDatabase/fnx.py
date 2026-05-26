@@ -23,7 +23,7 @@ from langchain_classic.chains.combine_documents import create_stuff_documents_ch
 load_dotenv()
 
 llm = ChatOllama(model="gemma3:12b")
-embedding = OllamaEmbeddings(model="qwen3-embedding:8b")
+embedding = OllamaEmbeddings(model="qwen3-embedding:0.6b")
 
 persist_directory = "./vectorstore"
 
