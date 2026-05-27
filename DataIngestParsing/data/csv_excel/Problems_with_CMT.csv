@@ -1,9 +1,0 @@
-#,Task,Issue,Severity,Date
-1,Documentation,Missing documentation for react native,No-go,
-2,Authentication,Missing documentation on how to auth existing project ( React Native Documentation ),High,
-3,Drive summary,Not receiving data on real time,No-go,
-4,JSDoc comments / annotation,Code not having annotations what each method does,Normal,
-5,Authentication Mail not arriving,Auth mail does not arrive,High,
-8,Android Emulator not connecting to Metro,"App does not connect to Metro while using Emulator, Works on physical device",High,
-9,Package not published on NPM,"SDK is not published in NPM per convention, does not auto update, package dependecies problems",No-go,
-10,No Respone on Zendesk,Tickets from from 12 Days ago without response / response without solution,High,

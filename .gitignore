@@ -11,3 +11,4 @@ wheels/
 .env
 
 VectorStoreAndVectorDatabase/vectorstore
+DataIngestParsing/data
